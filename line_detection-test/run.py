@@ -3,15 +3,21 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt
 
-blue  = True
+blue  = False
 red   = True
-green = True
+green = False
 
 
 blue_trigger  = 45
 red_trigger   = 45
 green_trigger = 45
 
+def raster(img):
+    for i in range (30):
+        img = cv2.line(img,(0,i*16),(640,i*16),(0,0,0),1)
+    for i in range (40):
+        img = cv2.line(img,(i*16,0),(i*16,480),(0,0,0),1)
+    return img
 
 def cleverSearch(img,b,trigger,color):
     i = 0
@@ -36,6 +42,9 @@ cam = cv2.VideoCapture(0)
 print 'camera resolution {}x{}'.format(cam.get(cv2.CAP_PROP_FRAME_WIDTH ),cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
 last = time.time()
+counter = 100
+
+print 'started'
 
 while True :
     ret, frame = cam.read(0)
@@ -52,7 +61,7 @@ while True :
 
         cleverSearch(img,b,red_trigger,0)
 
-        cv2.imshow('redOnly', img)
+        cv2.imshow('redOnly', raster(img))
 
     if green:
         #copy to work on
@@ -78,8 +87,12 @@ while True :
 
         cv2.imshow('blueOnly', img)
 
-    print 'processing took {} s'.format(time.time() - last)
-    last = time.time()
+    if counter == 0:
+        print 'processing took {} s'.format((time.time() - last)/1000)
+        last = time.time()
+        counter = 100
+
+    counter -= 1
 
     if cv2.waitKey(1) == ord('q'):
         break

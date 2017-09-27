@@ -3,11 +3,34 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt
 
-blue = True
-red  = True
+blue  = True
+red   = True
 green = True
 
-div = 2
+
+blue_trigger  = 45
+red_trigger   = 45
+green_trigger = 45
+
+
+def cleverSearch(img,b,trigger,color):
+    i = 0
+    while 480 > i:
+        turn = False
+        j = 0
+        while 640 > j:
+            if(b.item(i,j) < trigger):
+                img.itemset((i,j,color),255)
+                if turn :
+                    j -= 3
+                    turn = False
+                else:
+                    j += 1
+            else:
+                j += 4
+                turn = True
+        i += 1
+
 
 cam = cv2.VideoCapture(0)
 print 'camera resolution {}x{}'.format(cam.get(cv2.CAP_PROP_FRAME_WIDTH ),cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -27,10 +50,7 @@ while True :
         img[:,:,1] = 0
         img[:,:,0] = 0
 
-        for i in range(len(b)/div):
-            for j in range(len(b[0])/div):
-                if(b[i*div][j*div] < 30):
-                    img.itemset((i*div,j*div,0),255)
+        cleverSearch(img,b,red_trigger,0)
 
         cv2.imshow('redOnly', img)
 
@@ -42,10 +62,7 @@ while True :
         img[:,:,2] = 0
         img[:,:,0] = 0
 
-        for i in range(len(b)/div):
-            for j in range(len(b[0])/div):
-                if(b[i*div][j*div] < 30):
-                    img.itemset((i*div,j*div,2),255)
+        cleverSearch(img,b,green_trigger,2)
 
         cv2.imshow('greenOnly', img)
 
@@ -57,10 +74,7 @@ while True :
         img[:,:,1] = 0
         img[:,:,2] = 0
 
-        for i in range(len(b)/div):
-            for j in range(len(b[0])/div):
-                if(b[i*div][j*div] < 30):
-                    img.itemset((i*div,j*div,1),255)
+        cleverSearch(img,b,blue_trigger,1)
 
         cv2.imshow('blueOnly', img)
 

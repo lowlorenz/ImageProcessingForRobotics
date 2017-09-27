@@ -8,9 +8,9 @@ red   = True
 green = False
 
 
-blue_trigger  = 45
-red_trigger   = 45
-green_trigger = 45
+blue_trigger  = 25
+red_trigger   = 25
+green_trigger = 25
 
 
 def raster(img):
@@ -41,6 +41,35 @@ def cleverSearch(img,b,trigger,color):
         i += 1
 
 
+
+def blobAnaylsisViaCleversearch(img,b,trigger,color):
+    blobs = np.zeros((30,40))
+    i = 0
+    while 480 > i:
+        turn = False
+        j = 0
+        while 640 > j:
+            if(b.item(i,j) < trigger):
+                #img.itemset((i,j,color),255)
+                blobs[int(i/16)][int(j/16)] += 1
+                if turn :
+                    j -= 3
+                    turn = False
+                else:
+                    j += 1
+            else:
+                j += 4
+                turn = True
+        i += 1
+    for i in range (30):
+        for j in range (40):q
+            if blobs[i][j] > 1:
+                img = cv2.rectangle(img,(j*16,i*16),(j*16+16,i*16+16),(0,255,0),2)
+    return img
+
+
+
+
 cam = cv2.VideoCapture(0)
 print 'camera resolution {}x{}'.format(cam.get(cv2.CAP_PROP_FRAME_WIDTH ),cam.get(cv2.CAP_PROP_FRAME_HEIGHT))
 
@@ -62,7 +91,7 @@ while True :
         img[:,:,1] = 0
         img[:,:,0] = 0
 
-        cleverSearch(img,b,red_trigger,0)
+        img = blobAnaylsisViaCleversearch(img,b,red_trigger,0)
 
         cv2.imshow('redOnly', raster(img))
 

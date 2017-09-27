@@ -3,9 +3,9 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt
 
-blue = False
+blue = True
 red  = True
-green = False
+green = True
 
 div = 2
 
@@ -24,6 +24,21 @@ while True :
         img = np.array(frame, copy=True)
 
         #delete blue and green
+        img[:,:,1] = 0
+        img[:,:,0] = 0
+
+        for i in range(len(b)/div):
+            for j in range(len(b[0])/div):
+                if(b[i*div][j*div] < 30):
+                    img.itemset((i*div,j*div,0),255)
+
+        cv2.imshow('redOnly', img)
+
+    if green:
+        #copy to work on
+        img = np.array(frame, copy=True)
+
+        #delete red and blue
         img[:,:,2] = 0
         img[:,:,0] = 0
 
@@ -32,16 +47,25 @@ while True :
                 if(b[i*div][j*div] < 30):
                     img.itemset((i*div,j*div,2),255)
 
-        cv2.imshow('redOnly', img)
-
-    if green:
-        pass
+        cv2.imshow('greenOnly', img)
 
     if blue:
-        pass
+        #copy to work on
+        img = np.array(frame, copy=True)
+
+        #delete red and green
+        img[:,:,1] = 0
+        img[:,:,2] = 0
+
+        for i in range(len(b)/div):
+            for j in range(len(b[0])/div):
+                if(b[i*div][j*div] < 30):
+                    img.itemset((i*div,j*div,1),255)
+
+        cv2.imshow('blueOnly', img)
 
     print 'processing took {} s'.format(time.time() - last)
-    last = time.time() 
+    last = time.time()
 
     if cv2.waitKey(1) == ord('q'):
         break

@@ -49,6 +49,13 @@ def plotColor(b):
     Y = np.arange(0,30)
     X,Y = np.meshgrid(X,Y)
 
+    for x in np.nditer(blobs):
+        if x > 10:
+            x = 400
+        else:
+            x = 0
+
+
     ax.plot_surface(X,Y,b,rstride = 1,cstride = 1,cmap = 'hot')
 
     plt.show()

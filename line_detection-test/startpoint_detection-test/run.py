@@ -61,6 +61,7 @@ def stdAbweichung(list):
     return np.sqrt(np.sqrt(sum))
 
 def drawHorizonatls(img, blobs, color = (255,255,0),thick = 3):
+    horizontals = []
 
     for y in range(30):
         start_x = -1
@@ -71,14 +72,24 @@ def drawHorizonatls(img, blobs, color = (255,255,0),thick = 3):
                 if not draw:
                     draw = True
                     start_x = x
+                if draw and x == 39:
+                    end_x = x
+                    if end_x - start_x > 3:
+                        img = cv2.line(img,(start_x*16,y*16),(end_x*16,y*16),color,thick)
+                    horizontals.append((start_x,y,end_x,y))
+                    draw = False
             else:
                 if draw:
                     end_x = x
-                    img = cv2.line(img,(start_x*16,y*16),(end_x*16,y*16),color,thick)
+                    if end_x - start_x > 3:
+                        img = cv2.line(img,(start_x*16,y*16),(end_x*16,y*16),color,thick)
+                    horizontals.append((start_x,y,end_x,y))
                     draw = False
-    return img
+    return img, horizontals
 
 def drawVerticals(img, blobs, color = (0,255,255),thick = 3):
+    verticals = []
+
     for x in range(40):
         start_y = -1
         end_y = -1
@@ -88,12 +99,20 @@ def drawVerticals(img, blobs, color = (0,255,255),thick = 3):
                 if not draw:
                     draw = True
                     start_y = y
+                if draw and y == 29:
+                    end_y = y
+                    if end_y - start_y > 3:
+                        img = cv2.line(img,(x*16,start_y*16),(x*16,end_y*16),color,thick)
+                    verticals.append((x,start_y,x,end_y))
+                    draw = False
             else:
                 if draw:
                     end_y = y
-                    img = cv2.line(img,(x*16,start_y*16),(x*16,end_y*16),color,thick)
+                    if end_y - start_y > 3:
+                        img = cv2.line(img,(x*16,start_y*16),(x*16,end_y*16),color,thick)
+                    verticals.append((x,start_y,x,end_y))
                     draw = False
-    return img
+    return img, verticals
 
 
 def calcRoute(img,blobs):
@@ -147,13 +166,13 @@ counter = 10
 
 print 'started'
 
-while True :
+while counter > -10000 :
     ret, frame = cam.read(0)
     b,g,r = cv2.split(frame)
 
     frame, blobs = blobAnaylsisViaCleversearch(frame,g,trigger,0)
-    frame = drawVerticals(frame, blobs)
-    #frame = drawHorizonatls(frame, blobs)
+    frame,verticals = drawVerticals(frame, blobs)
+    frame,horizontals = drawHorizonatls(frame, blobs)
     frame = calcRoute(frame,blobs)
 
 
@@ -170,3 +189,10 @@ while True :
     time.sleep(0.02)
     if cv2.waitKey(1) == ord('q'):
         break
+
+cv2.imwrite('test.png',frame)
+print verticals[:]
+
+print '--'
+
+print horizontals[:]

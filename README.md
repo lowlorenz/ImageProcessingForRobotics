@@ -3,12 +3,12 @@ ImageProcessingForRobotics
 Researches for a Robocup Junior Rescue imageprocessing roboter
 
 reached:
-1 - marked up line from live usb camera using openCv 3.3
- speed : 0.8 s per frame
-2 - make it fasssssssssssssst
- speed : 0.05 s per frame
-3 - sonic
- speed : 0.005 ~ 0.012 s per frame without print to console & without displaying the images
+1 - marked up line from live usb camera using openCv 3.3</br>
+ speed : 0.8 s per frame</br>
+2 - make it fasssssssssssssst</br>
+ speed : 0.05 s per frame</br>
+3 - sonic</br>
+ speed : 0.005 ~ 0.012 s per frame without print to console & without displaying the images</br>
 
-goal:
-4 - box results as a line
+goal:</br>
+4 - box results as a line</br>

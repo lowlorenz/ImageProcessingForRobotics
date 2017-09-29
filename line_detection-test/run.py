@@ -3,14 +3,14 @@ import numpy as np
 import time
 from matplotlib import pyplot as plt
 
-blue  = False
+blue  = True
 red   = True
-green = False
+green = True
 
 
-blue_trigger  = 45
-red_trigger   = 45
-green_trigger = 45
+blue_trigger  = 105
+red_trigger   = 105
+green_trigger = 105
 
 
 def raster(img):
@@ -51,7 +51,7 @@ print 'started'
 
 while True :
     ret, frame = cam.read(0)
-    frame = cv2.GaussianBlur(frame,(5,5),0)
+    #frame = cv2.GaussianBlur(frame,(5,5),0)
     b,g,r = cv2.split(frame)
 
     if red:

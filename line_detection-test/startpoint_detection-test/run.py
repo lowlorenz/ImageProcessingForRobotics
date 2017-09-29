@@ -60,7 +60,7 @@ def stdAbweichung(list):
     sum /= len(list)
     return np.sqrt(np.sqrt(sum))
 
-def drawVerticals(img, blobs, color = (255,255,0),thick = 3):
+def drawHorizonatls(img, blobs, color = (255,255,0),thick = 3):
 
     for y in range(30):
         start_x = -1
@@ -75,6 +75,23 @@ def drawVerticals(img, blobs, color = (255,255,0),thick = 3):
                 if draw:
                     end_x = x
                     img = cv2.line(img,(start_x*16,y*16),(end_x*16,y*16),color,thick)
+                    draw = False
+    return img
+
+def drawVerticals(img, blobs, color = (0,255,255),thick = 3):
+    for x in range(40):
+        start_y = -1
+        end_y = -1
+        draw = False
+        for y in range(30):
+            if blobs[y][x] > 10:
+                if not draw:
+                    draw = True
+                    start_y = y
+            else:
+                if draw:
+                    end_y = y
+                    img = cv2.line(img,(x*16,start_y*16),(x*16,end_y*16),color,thick)
                     draw = False
     return img
 
@@ -134,9 +151,10 @@ while True :
     ret, frame = cam.read(0)
     b,g,r = cv2.split(frame)
 
-    frame, blobs = blobAnaylsisViaCleversearch(frame,b,trigger,0)
-    img = drawVerticals(frame, blobs)
-    #frame = calcRoute(frame,blobs)
+    frame, blobs = blobAnaylsisViaCleversearch(frame,g,trigger,0)
+    frame = drawVerticals(frame, blobs)
+    #frame = drawHorizonatls(frame, blobs)
+    frame = calcRoute(frame,blobs)
 
 
     cv2.imshow('Blue', frame)
